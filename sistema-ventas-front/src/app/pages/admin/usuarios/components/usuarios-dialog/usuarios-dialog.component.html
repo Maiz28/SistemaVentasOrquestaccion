@@ -1,0 +1,80 @@
+<h1 mat-dialog-title>Usuario</h1>
+<mat-dialog-content>
+  <form [formGroup]="userForm" (submit)="onSave()">
+    <!-- Nombre -->
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input type="text" formControlName="nombre" matInput />
+      <mat-error>
+        {{ baseForm.getErrorMessage(userForm.get("nombre")) }}
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Apellidos -->
+    <mat-form-field class="full-width"  appearance="outline">
+      <mat-label>Apellidos</mat-label>
+      <input type="text" formControlName="apellidos" matInput />
+      <mat-error>
+        {{ baseForm.getErrorMessage(userForm.get("apellidos")) }}
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Username -->
+    <mat-form-field class="full-width"  appearance="outline">
+      <mat-label>Nombre de Usuario</mat-label>
+      <input type="text" formControlName="username" matInput />
+      <mat-error>
+        {{ baseForm.getErrorMessage(userForm.get("username")) }}
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Rol -->
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Rol</mat-label>
+      <mat-select formControlName="rol">
+        @for (rol of roles; track $index;){
+          <mat-option [value]="rol.cverol">{{rol.descripcion + ' - ' + rol.clave}}
+
+          </mat-option>
+        }
+      </mat-select>
+      <mat-error>
+        {{ baseForm.getErrorMessage(userForm.get("rol")) }}
+      </mat-error>
+    </mat-form-field>
+
+
+    <!-- Password -->
+    <mat-form-field  *ngIf="actionTODO == 'new'" class="full-width"  appearance="outline">
+      <mat-label>Contraseña</mat-label>
+      <input type="password" formControlName="password" matInput />
+      <mat-error>
+        {{ baseForm.getErrorMessage(userForm.get("password")) }}
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Confirm Password -->
+    <mat-form-field  *ngIf="actionTODO == 'new'" class="full-width"  appearance="outline">
+      <mat-label>Confirmar Contraseña</mat-label>
+      <input type="password" formControlName="confirmPassword" matInput />
+      <mat-error>
+        {{ baseForm.getErrorMessage(userForm.get("confirmPassword")) }}
+      </mat-error>
+    </mat-form-field>
+
+    <div align="center">
+     <button tuye="button" mat-flat-button color="warn" class="me-2">
+Limpiar
+     </button>
+     <button mat-flat-button color="primary" type="submit">
+        {{titleButton}}
+             </button>
+
+    </div>
+
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cerrar</button>
+
+</mat-dialog-actions>

@@ -1,0 +1,47 @@
+services:
+  postgres17:
+    container_name: postgres17
+    image: postgres:17-alpine
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_PASSWORD: linux123
+      POSTGRES_DB: db_desarrollo_integral
+    volumes:
+      - data-postgres:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: always
+    networks:
+      - mnm
+  frontend:
+    container_name: sistema-ventas-app-frontend
+    build:
+      context: ./sistema-ventas-front
+      dockerfile: Dockerfile
+    ports:
+      - "4000:80"
+    networks:
+      - mnm
+    depends_on:
+      - backend
+    restart: always
+  backend:
+    container_name: sistema-ventas-app-backend
+    build:
+      context: ./sistema-ventas-app
+      dockerfile: Dockerfile
+    ports:
+      - "3100:3000"
+    networks:
+      - mnm
+    depends_on:
+      - postgres17
+    restart: always
+
+volumes:
+  data-postgres:
+    name: data-postgres
+
+networks:
+  mnm:
+    driver: bridge

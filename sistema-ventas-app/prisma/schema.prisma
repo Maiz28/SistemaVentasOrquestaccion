@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:linux123@postgres17:5432/db_desarrollo_integral?schema=public"
+}
+
+model categoria {
+  cvecategoria Int        @id @default(autoincrement()) @db.SmallInt
+  descripcion  String     @db.VarChar(250)
+  activo       Boolean
+  producto     producto[]
+}
+
+model detalle_venta {
+  cvedetalleventa Int      @id @default(autoincrement()) @db.SmallInt
+  cantidad        Int
+  precioproducto  Float    @db.Real
+  cveproducto     Int      @db.SmallInt
+  cveventa        Int      @db.SmallInt
+  producto        producto @relation(fields: [cveproducto], references: [cveproducto], onDelete: NoAction, onUpdate: NoAction)
+  venta           venta    @relation(fields: [cveventa], references: [cveventa], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model producto {
+  cveproducto   Int             @id @default(autoincrement()) @db.SmallInt
+  descripcion   String          @db.VarChar(350)
+  precio        Float           @db.Real
+  cantidad      Int?
+  cvecategoria  Int             @db.SmallInt
+  detalle_venta detalle_venta[]
+  categoria     categoria       @relation(fields: [cvecategoria], references: [cvecategoria], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model rol {
+  cverol      Int       @id @default(autoincrement()) @db.SmallInt
+  descripcion String    @db.VarChar(250)
+  clave       String?   @db.VarChar(45)
+  activo      Boolean
+  usuario     usuario[]
+}
+
+model usuario {
+  cveusuario    Int      @id @default(autoincrement()) @db.SmallInt
+  nombre        String   @db.VarChar(350)
+  apellidos     String   @db.VarChar(450)
+  username      String   @db.VarChar(150)
+  password      String   @db.VarChar(350)
+  fecharegistro DateTime @default(now()) @db.Timestamptz(6)
+  cverol        Int      @db.SmallInt
+  rol           rol      @relation(fields: [cverol], references: [cverol], onDelete: NoAction, onUpdate: NoAction)
+  venta         venta[]
+}
+
+model venta {
+  cveventa      Int             @id @default(autoincrement()) @db.SmallInt
+  totalventa    Float           @db.Real
+  fechaventa    DateTime        @db.Timestamptz(6)
+  cveusuario    Int             @db.SmallInt
+  detalle_venta detalle_venta[]
+  usuario       usuario         @relation(fields: [cveusuario], references: [cveusuario], onDelete: NoAction, onUpdate: NoAction)
+}
